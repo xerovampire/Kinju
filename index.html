@@ -574,4 +574,79 @@
             }
             
             // Show reason
-     
+             function showReason(index) {
+                reasonElements.forEach(reason => reason.classList.remove('active'));
+                reasonElements[index].classList.add('active');
+                updateProgress();
+            }
+            
+            // Next button event
+            nextBtn.addEventListener('click', () => {
+                currentReasonIndex = (currentReasonIndex + 1) % reasons.length;
+                showReason(currentReasonIndex);
+                createSparkles(10);
+            });
+            
+            // Previous button event
+            prevBtn.addEventListener('click', () => {
+                currentReasonIndex = (currentReasonIndex - 1 + reasons.length) % reasons.length;
+                showReason(currentReasonIndex);
+                createSparkles(10);
+            });
+            
+            // Create sparkles function
+            function createSparkles(count = 10) {
+                // Clear previous sparkles
+                while (sparklesContainer.firstChild) {
+                    sparklesContainer.removeChild(sparklesContainer.firstChild);
+                }
+                
+                for (let i = 0; i < count; i++) {
+                    const sparkle = document.createElement('div');
+                    sparkle.classList.add('sparkle');
+                    
+                    // Random position
+                    const x = Math.random() * 100;
+                    const y = Math.random() * 100;
+                    
+                    // Random delay
+                    const delay = Math.random() * 2;
+                    
+                    // Random size
+                    const size = Math.random() * 5 + 3;
+                    
+                    sparkle.style.left = `${x}%`;
+                    sparkle.style.top = `${y}%`;
+                    sparkle.style.width = `${size}px`;
+                    sparkle.style.height = `${size}px`;
+                    sparkle.style.animationDelay = `${delay}s`;
+                    
+                    sparklesContainer.appendChild(sparkle);
+                    
+                    // Remove sparkle after animation
+                    setTimeout(() => {
+                        if (sparkle.parentNode === sparklesContainer) {
+                            sparklesContainer.removeChild(sparkle);
+                        }
+                    }, 2000);
+                }
+            }
+            
+            // Keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight') {
+                    nextBtn.click();
+                } else if (e.key === 'ArrowLeft') {
+                    prevBtn.click();
+                }
+            });
+            
+            // Update progress bar on load
+            updateProgress();
+            
+            // Create initial sparkles
+            createSparkles(5);
+        });
+    </script>
+</body>
+</html>
