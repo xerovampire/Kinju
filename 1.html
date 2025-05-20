@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hey Love - From Kinju</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(to bottom, #ff9a9e 0%, #fad0c4 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .overlay-hearts {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'%3E%3Cpath fill='%23ffffff' opacity='0.2' d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E");
+            opacity: 0.3;
+        }
+        
+        .overlay-dots {
+            background-image: radial-gradient(#fff 1px, transparent 1px);
+            background-size: 30px 30px;
+            opacity: 0.1;
+        }
+        
+        .container {
+            max-width: 500px;
+            width: 90%;
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .header {
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            color: #fff;
+            font-weight: 300;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header h2 {
+            font-size: 1.5rem;
+            color: #fff;
+            font-weight: 300;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header h3 {
+            font-size: 2rem;
+            color: #fff;
+            font-weight: 500;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .reason-container {
+            position: relative;
+            height: 250px;
+            overflow: hidden;
+        }
+        
+        .reason {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .reason.active {
+            opacity: 1;
+        }
+        
+        .reason h2 {
+            font-size: 1.8rem;
+            color: #fff;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .reason p {
+            font-size: 1.3rem;
+            color: #fff;
+            line-height: 1.6;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 0 15px;
+        }
+        
+        .navigation {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .nav-btn {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1));
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(4px);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-btn:hover {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.2));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .nav-btn:active {
+            transform: translateY(1px);
+        }
+        
+        .icons {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            gap: 30px;
+        }
+        
+        .icon {
+            font-size: 2rem;
+            color: #6a73aa;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+        }
+        
+        .heart-icon {
+            font-size: 2rem;
+            color: #6a73aa;
+            animation: pulse 1.5s infinite;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+        
+        .progress {
+            height: 100%;
+            background-color: #fff;
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+        
+        .counter {
+            margin-top: 10px;
+            color: #fff;
+            font-size: 0.9rem;
+        }
+        
+        .sparkles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 5;
+        }
+        
+        .sparkle {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background-color: #fff;
+            border-radius: 50%;
+            opacity: 0;
+            animation: sparkle 2s linear infinite;
+        }
+        
+        .reveal-container {
+            perspective: 1000px;
+            margin-top: 15px;
+        }
+        
+        .reveal-btn {
+            background: linear-gradient(135deg, #ff758c, #ff7eb3);
+            border: none;
+            color: white;
+            padding: 14px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(255, 117, 140, 0.4);
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+        
+        .reveal-btn:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        .reveal-btn:hover:before {
+            left: 100%;
+        }
+        
+        .reveal-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 117, 140, 0.5);
+        }
+        
+        .reveal-btn:active {
+            transform: translateY(1px);
+        }
+        
+        .intro-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 154, 158, 0.95), rgba(250, 208, 196, 0.95));
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+        
+        .intro-screen.hidden {
+            transform: translateY(-100%);
+            opacity: 0;
+        }
+        
+        .audio-controls {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            z-index: 15;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .audio-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            color: white;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+        
+        .audio-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Loading animation for reveal button */
+        .loading-ring {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+        
+        .loading-ring:after {
+            content: " ";
+            display: block;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            border-color: #fff transparent #fff transparent;
+            animation: loading-ring 1.2s linear infinite;
+        }
+        
+        @keyframes loading-ring {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        
+        @keyframes sparkle {
+            0% {
+                opacity: 0;
+                transform: scale(0);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay overlay-hearts"></div>
+    <div class="overlay overlay-dots"></div>
+    
+    <div class="container">
+        <div class="audio-controls">
+            <button id="music-toggle" class="audio-btn">🔊</button>
+        </div>
+        
+        <div class="intro-screen" id="intro-screen">
+            <h1 style="font-size: 2.8rem; margin-bottom: 30px; color: white; text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);">
+                Hey love...
+            </h1>
+            <div class="reveal-container">
+                <button id="reveal-btn" class="reveal-btn">
+                    Reveal <span id="loading-indicator" style="display: none;" class="loading-ring"></span>
+                </button>
+            </div>
+        </div>
+        
+        <div class="header">
+            <h1>Hey love,</h1>
+            <h2>here's a little something from me to you,</h2>
+            <h3>Kinju</h3>
+        </div>
+        
+        <div class="icons">
+            <div class="icon">🎧</div>
+            <div class="icon">🎵</div>
+        </div>
+        
+        <div class="reason-container" id="reason-container">
+            <!-- Reasons will be inserted here by JavaScript -->
+        </div>
+        
+        <div class="heart-icon">
+            <span>❤️</span>
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+        <div class="counter">Reason <span id="current-reason">1</span> of <span id="total-reasons">50</span></div>
+        
+        <div class="navigation">
+            <button class="nav-btn" id="prev">Previous</button>
+            <button class="nav-btn" id="next">Next</button>
+        </div>
+        
+        <div class="sparkles" id="sparkles"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // List of reasons
+            const reasons = [
+                "I love you because you are kind",
+                "I love you because you are beautiful",
+                "I love you because you're sweet",
+                "I love you because you're effortlessly so cute",
+                "I love you because you msg me whenever you are free",
+                "I love you because you never let anyone else flirt with you",
+                "I love you because you make me smile",
+                "I love you because you dont pretend",
+                "I love you because you listen my bullshit",
+                "I love you because your eyes are beautiful (idk)",
+                "I love you because you are like me",
+                "I love you because you're thoughtful",
+                "I love you because you never let convo die",
+                "I love you because you care for me",
+                "I love you because you make me happy :)",
+                "I love you because you match my vibe",
+                "I love you because you never question me too much",
+                "I love you because you are perfect",
+                "I love you because your sense of humor matches mine perfectly",
+                "I love you because you're beautiful inside and out without even trying",
+                "I love you because you are so charming",
+                "I love you because your energy lifts me up when im down",
+                "I love you because you also contribute in conversations not like other girls",
+                "I love you because you're not using me",
+                "I love you because you are the most perfect girl i have seen",
+                "I love you because you're not so shy",
+                "I love you because you never ruin my mood",
+                "I love you because you're not rude (to me atleast)",
+                "I love you because you're playful and keep things fun",
+                "I love you because you're cutuuuuu",
+                "I love you because you're a great person",
+                "I love you because you're gentle",
+                "I love you because you're energetic",
+                "I love you because you're a good listener",
+                "I love you because you're cute + hot (rare combo)",
+                "I love you because you never get offended by my useless flirting",
+                "I love you because you dont get annoyed of me and text me whenever you get free",
+                "I love you because you're adorable",
+                "I love you because you are not cringe",
+                "I love you because you are my type",
+                "I love you because you're shawty (i love short girls😭)",
+                "I love you because you're so damn beautiful",
+                "I love you because you listen to my bullshit very carefully",
+                "I love you because you're childish",
+                "I love you because i can share anything with you",
+                "I love you because you make my day better",
+                "I love you because you're so damn cute not only from outside but by your behaviour too",
+                "I love you because you like talking to me (you dont use reels to make a convo and you put in efforts to talk)",
+                "I love you because you make every moment better just by being there",
+                "I love you because you're you and i wouldnt change a single thing"
+            ];
+            
+            const reasonContainer = document.getElementById('reason-container');
+            const prevBtn = document.getElementById('prev');
+            const nextBtn = document.getElementById('next');
+            const progressBar = document.getElementById('progress');
+            const currentReasonDisplay = document.getElementById('current-reason');
+            const totalReasonsDisplay = document.getElementById('total-reasons');
+            const revealBtn = document.getElementById('reveal-btn');
+            const introScreen = document.getElementById('intro-screen');
+            const loadingIndicator = document.getElementById('loading-indicator');
+            const musicToggle = document.getElementById('music-toggle');
+            const sparklesContainer = document.getElementById('sparkles');
+            
+            let currentReasonIndex = 0;
+            totalReasonsDisplay.textContent = reasons.length;
+            
+            // Create audio element programmatically
+            const bgMusic = document.createElement('audio');
+            bgMusic.src = 'https://assets.mixkit.co/music/preview/mixkit-a-very-happy-christmas-897.mp3'; // Alternative music source
+            bgMusic.loop = true;
+            bgMusic.volume = 0.3;
+            document.body.appendChild(bgMusic);
+            
+            let isMusicPlaying = false;
+            
+            // Toggle music
+            musicToggle.addEventListener('click', () => {
+                if (isMusicPlaying) {
+                    bgMusic.pause();
+                    musicToggle.textContent = '🔊';
+                } else {
+                    // Try to play music with a user interaction
+                    let playPromise = bgMusic.play();
+                    
+                    if (playPromise !== undefined) {
+                        playPromise.then(() => {
+                            musicToggle.textContent = '🔇';
+                            isMusicPlaying = true;
+                        }).catch(error => {
+                            console.log('Audio playback prevented:', error);
+                        });
+                    }
+                }
+                isMusicPlaying = !isMusicPlaying;
+            });
+            
+            // Reveal button action
+            revealBtn.addEventListener('click', function() {
+                loadingIndicator.style.display = 'inline-block';
+                revealBtn.disabled = true;
+                
+                // Try to play music with a user interaction
+                let playPromise = bgMusic.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        musicToggle.textContent = '🔇';
+                        isMusicPlaying = true;
+                    }).catch(error => {
+                        console.log('Audio playback prevented:', error);
+                    });
+                }
+                
+                // Simulate loading
+                setTimeout(() => {
+                    introScreen.classList.add('hidden');
+                    createSparkles(30);
+                }, 1500);
+            });
+            
+            // Create reason elements
+            reasons.forEach((reason, index) => {
+                const reasonElement = document.createElement('div');
+                reasonElement.classList.add('reason');
+                if (index === 0) reasonElement.classList.add('active');
+                
+                const reasonTitle = document.createElement('h2');
+                reasonTitle.textContent = `Reason #${index + 1}`;
+                
+                const reasonText = document.createElement('p');
+                reasonText.textContent = reason;
+                
+                reasonElement.appendChild(reasonTitle);
+                reasonElement.appendChild(reasonText);
+                
+                reasonContainer.appendChild(reasonElement);
+            });
+            
+            const reasonElements = document.querySelectorAll('.reason');
+            
+            // Update progress bar
+            function updateProgress() {
+                const progressPercentage = ((currentReasonIndex + 1) / reasons.length) * 100;
+                progressBar.style.width = `${progressPercentage}%`;
+                currentReasonDisplay.textContent = currentReasonIndex + 1;
+            }
+            
+            // Show reason
+            function showReason(index) {
+                reasonElements.forEach(reason => reason.classList.remove('active'));
+                reasonElements[index].classList.add('active');
+                updateProgress();
+            }
+            
+            // Next button event
+            nextBtn.addEventListener('click', () => {
+                currentReasonIndex = (currentReasonIndex + 1) % reasons.length;
+                showReason(currentReasonIndex);
+                createSparkles(10);
+            });
+            
+            // Previous button event
+            prevBtn.addEventListener('click', () => {
+                currentReasonIndex = (currentReasonIndex - 1 + reasons.length) % reasons.length;
+                showReason(currentReasonIndex);
+                createSparkles(10);
+            });
+            
+            // Create sparkles function
+            function createSparkles(count = 10) {
+                // Clear previous sparkles
+                while (sparklesContainer.firstChild) {
+                    sparklesContainer.removeChild(sparklesContainer.firstChild);
+                }
+                
+                for (let i = 0; i < count; i++) {
+                    const sparkle = document.createElement('div');
+                    sparkle.classList.add('sparkle');
+                    
+                    // Random position
+                    const x = Math.random() * 100;
+                    const y = Math.random() * 100;
+                    
+                    // Random delay
+                    const delay = Math.random() * 2;
+                    
+                    // Random size
+                    const size = Math.random() * 5 + 3;
+                    
+                    sparkle.style.left = `${x}%`;
+                    sparkle.style.top = `${y}%`;
+                    sparkle.style.width = `${size}px`;
+                    sparkle.style.height = `${size}px`;
+                    sparkle.style.animationDelay = `${delay}s`;
+                    
+                    sparklesContainer.appendChild(sparkle);
+                    
+                    // Remove sparkle after animation
+                    setTimeout(() => {
+                        if (sparkle.parentNode === sparklesContainer) {
+                            sparklesContainer.removeChild(sparkle);
+                        }
+                    }, 2000);
+                }
+            }
+            
+            // Keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight') {
+                    nextBtn.click();
+                } else if (e.key === 'ArrowLeft') {
+                    prevBtn.click();
+                }
+            });
+            
+            // Update progress bar on load
+            updateProgress();
+            
+            // Create initial sparkles
+            createSparkles(5);
+        });
+    </script>
+</body>
+</html>
